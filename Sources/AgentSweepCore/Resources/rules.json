@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "updated": "2026-10-22",
+  "defaults": { "historyMaxAgeDays": 30 },
+  "tools": [
+    {
+      "id": "dev-cache",
+      "name": "开发缓存",
+      "color": "#94A3B8",
+      "shared": true,
+      "detect": { "paths": ["~/.npm/_npx", "~/.cache/uv", "~/.bun/install/cache", "~/Library/Caches/pip"] },
+      "rules": [
+        { "id": "dc-uv", "label": "uv Python 包缓存", "paths": ["~/.cache/uv"], "risk": "safe", "action": "trash",
+          "explain": "uvx 启动的 MCP 服务器都会往这里装依赖。删除后首次运行会变慢，也会影响你的其他 Python 项目。" },
+        { "id": "dc-npx", "label": "npx 临时包", "paths": ["~/.npm/_npx"], "risk": "safe", "action": "trash",
+          "explain": "MCP 服务器大多用 npx 启动，每个版本都会留一份。删除后下次启动会重新下载。" },
+        { "id": "dc-bun", "label": "bun 包缓存", "paths": ["~/.bun/install/cache"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重新下载。" },
+        { "id": "dc-pip", "label": "pip 下载缓存", "paths": ["~/Library/Caches/pip"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重新下载。" }
+      ]
+    },
+    {
+      "id": "codex",
+      "name": "Codex",
+      "color": "#10A37F",
+      "detect": { "paths": ["~/.codex", "~/Library/Application Support/Codex", "~/Library/Application Support/com.openai.codex"], "processes": ["codex", "Codex"] },
+      "rules": [
+        { "id": "cx-protected", "label": "登录凭证、配置、插件与技能", "risk": "protected", "action": "none",
+          "paths": ["~/.codex/auth.json", "~/.codex/config.toml", "~/.codex/AGENTS.md", "~/.codex/skills", "~/.codex/plugins", "~/.codex/memories", "~/.codex/memories_1.sqlite", "~/.codex/rules", "~/.codex/prompts", "~/.codex/hooks.json", "~/.codex/session_index.jsonl", "~/.codex/history.jsonl"],
+          "explain": "删除会导致重新登录、设置丢失。" },
+        { "id": "cx-sessions", "label": "旧会话", "paths": ["~/.codex/sessions/**/*.jsonl", "~/.codex/sessions/**/*.jsonl.zst"], "risk": "history", "action": "age-filter", "export": "codex",
+          "explain": "每次会话的完整记录（rollout），是 Codex 最大的空间占用。" },
+        { "id": "cx-archived", "label": "已归档会话", "paths": ["~/.codex/archived_sessions"], "risk": "history", "action": "age-filter", "export": "codex",
+          "explain": "已归档的会话，平时不会再打开。" },
+        { "id": "cx-generated", "label": "生成的图片与附件", "paths": ["~/.codex/generated_images", "~/.codex/attachments"], "risk": "history", "action": "age-filter",
+          "explain": "Codex 生成的图片和你上传的附件。" },
+        { "id": "cx-db", "label": "线程历史与日志数据库", "paths": ["~/.codex/thread_history_*.sqlite", "~/.codex/state_*.sqlite", "~/.codex/logs_*.sqlite"], "risk": "compact", "action": "vacuum",
+          "explain": "Codex 的内部数据库。不能删除，退出 Codex 后可以压缩。" },
+        { "id": "cx-tmp", "label": "残留临时文件", "paths": ["~/.codex/..codex-global-state.json.tmp-*"], "risk": "safe", "action": "trash",
+          "explain": "写入中断后留下的临时文件。" },
+        { "id": "cx-git-tmp", "label": "过期的临时克隆", "paths": ["~/.codex/.tmp/git-*", "~/.codex/tmp/*"], "risk": "safe", "action": "age-filter", "ageUnit": "entry",
+          "explain": "安装插件时临时克隆的仓库，用完就不再需要。插件市场缓存不在此列。" },
+        { "id": "cx-cache", "label": "缓存、终端快照与日志", "paths": ["~/.codex/shell_snapshots", "~/.codex/cache", "~/.codex/log"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重建。" },
+        { "id": "cx-app-cache", "label": "桌面版内核缓存", "risk": "safe", "action": "trash",
+          "paths": ["~/Library/Application Support/Codex/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,component_crx_cache}", "~/Library/Application Support/Codex/Default/{Cache,Code Cache,GPUCache,DawnGraphiteCache,DawnWebGPUCache}", "~/Library/Application Support/Codex/Default/Partitions/*/{Cache,Code Cache,GPUCache,DawnGraphiteCache,DawnWebGPUCache}", "~/Library/Caches/Codex", "~/Library/Caches/com.openai.codex"],
+          "explain": "Codex 桌面版的浏览器内核缓存和崩溃日志，删除后会自动重建。" },
+        { "id": "cx-browser-sw", "label": "内置浏览器的网站离线缓存", "risk": "safe", "action": "trash",
+          "paths": ["~/Library/Application Support/Codex/Default/Partitions/*/Service Worker/CacheStorage"],
+          "explain": "Codex 内置浏览器里网页留下的离线缓存，相当于浏览器的「清除缓存」，不影响登录状态。" },
+        { "id": "cx-config-bak", "label": "配置的旧备份", "paths": ["~/.codex/config.toml.bak*", "~/.codex/config.toml.before-*", "~/.codex/hooks.json.bak", "~/.codex/skills_backup"], "risk": "safe", "action": "trash",
+          "explain": "修改配置时留下的备份。" }
+      ]
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "color": "#8B8BFF",
+      "detect": { "paths": ["~/.cursor", "~/Library/Application Support/Cursor"], "apps": ["Cursor.app"], "processes": ["Cursor"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "cu-protected", "label": "扩展、MCP 与规则", "risk": "protected", "action": "none",
+          "paths": ["~/.cursor/mcp.json", "~/.cursor/cli-config.json", "~/.cursor/skills", "~/.cursor/skills-cursor", "~/.cursor/rules", "~/.cursor/extensions", "~/.cursor/hooks.json", "~/.cursor/argv.json", "~/Library/Application Support/Cursor/User/settings.json", "~/Library/Application Support/Cursor/User/keybindings.json", "~/Library/Application Support/Cursor/User/snippets"],
+          "explain": "删除会丢失扩展和配置。" },
+        { "id": "cu-state-db", "label": "聊天记录与编辑器状态", "paths": ["~/Library/Application Support/Cursor/User/globalStorage/state.vscdb"], "risk": "compact", "action": "vacuum",
+          "explain": "Cursor 的全部聊天记录都在这里，千万不能删。退出 Cursor 后可以压缩。" },
+        { "id": "cu-state-backup", "label": "数据库旧备份", "paths": ["~/Library/Application Support/Cursor/User/globalStorage/state.vscdb.backup"], "risk": "safe", "action": "trash",
+          "explain": "聊天数据库的旧备份，Cursor 会定期重新生成。" },
+        { "id": "cu-chromium-cache", "label": "内核缓存与扩展安装包", "paths": ["~/Library/Application Support/Cursor/{Cache,Code Cache,GPUCache,DawnGraphiteCache,DawnWebGPUCache,CachedData,CachedExtensionVSIXs,CachedProfilesData,Crashpad,logs,blob_storage}"], "risk": "safe", "action": "trash",
+          "explain": "浏览器内核缓存、已安装扩展的 .vsix 安装包和崩溃日志。" },
+        { "id": "cu-workspace", "label": "旧项目工作区状态", "paths": ["~/Library/Application Support/Cursor/User/workspaceStorage/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "每个打开过的项目各存一份状态，项目早就不用了也不会删除。" },
+        { "id": "cu-tmp", "label": "残留临时文件与调试日志", "paths": ["~/.cursor/*.tmp", "~/.cursor/*.sample.txt", "~/.cursor/debug-logs", "~/.cursor/browser-logs"], "risk": "safe", "action": "trash",
+          "explain": "写入中断后留下的临时文件和调试日志。" },
+        { "id": "cu-chats", "label": "Agent CLI 会话", "paths": ["~/.cursor/chats/*", "~/.cursor/projects/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "Cursor Agent CLI 的会话记录。" },
+        { "id": "cu-worktrees", "label": "后台 Agent 留下的代码副本", "paths": ["~/.cursor/worktrees/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "后台 Agent 创建的代码副本，任务结束后常常留下来。" },
+        { "id": "cu-orphan", "label": "Cursor 全部残留数据", "paths": ["~/.cursor", "~/Library/Application Support/Cursor"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 Cursor.app，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "claude-code",
+      "name": "Claude Code",
+      "color": "#D97757",
+      "detect": { "paths": ["~/.claude"], "processes": ["claude"] },
+      "rules": [
+        { "id": "cc-protected", "label": "配置、记忆、技能与插件", "risk": "protected", "action": "none",
+          "paths": ["~/.claude/settings.json", "~/.claude/settings.local.json", "~/.claude.json", "~/.claude/.claude.json", "~/.claude/CLAUDE.md", "~/.claude/skills", "~/.claude/plugins", "~/.claude/agents", "~/.claude/commands", "~/.claude/hooks", "~/.claude/history.jsonl", "~/.claude/.credentials.json"],
+          "explain": "删除会丢失你的设置。" },
+        { "id": "cc-projects", "label": "旧会话", "paths": ["~/.claude/projects/*/*.jsonl"], "risk": "history", "action": "age-filter", "export": "claude",
+          "explain": "每个项目的对话记录，claude --resume 会用到。Claude Code 默认也会自动清理 30 天前的会话。" },
+        { "id": "cc-file-history", "label": "文件修改快照", "paths": ["~/.claude/file-history"], "risk": "history", "action": "age-filter",
+          "explain": "Claude 修改文件前的快照，用于回退。" },
+        { "id": "cc-cache", "label": "运行缓存与终端快照", "paths": ["~/.claude/shell-snapshots", "~/.claude/cache", "~/Library/Caches/claude-cli-nodejs"], "risk": "safe", "action": "trash",
+          "explain": "每次启动会重新生成。" },
+        { "id": "cc-logs", "label": "日志", "paths": ["~/.claude/*.log", "~/Library/Logs/Claude"], "risk": "safe", "action": "trash",
+          "explain": "只用于排查问题。" },
+        { "id": "cc-backups", "label": "配置的旧备份", "paths": ["~/.claude/backups", "~/.claude/settings.json.bak*"], "risk": "safe", "action": "trash",
+          "explain": "修改配置时留下的备份。" }
+      ]
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini / Antigravity",
+      "color": "#4F8DF7",
+      "detect": { "paths": ["~/.gemini", "~/.antigravity", "~/Library/Application Support/Antigravity"], "processes": ["gemini", "Antigravity"] },
+      "rules": [
+        { "id": "gm-protected", "label": "登录凭证与配置", "risk": "protected", "action": "none",
+          "paths": ["~/.gemini/settings.json", "~/.gemini/oauth_creds.json", "~/.gemini/google_accounts.json", "~/.gemini/GEMINI.md", "~/.gemini/skills", "~/.gemini/commands", "~/.gemini/agents", "~/.gemini/hooks"],
+          "explain": "删除会导致重新登录、设置丢失。" },
+        { "id": "gm-tmp", "label": "CLI 会话与检查点", "paths": ["~/.gemini/tmp/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "Gemini CLI 的会话与检查点。" },
+        { "id": "gm-cache", "label": "缓存", "paths": ["~/.gemini/cache"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重建。" },
+        { "id": "gm-ag-cache", "label": "Antigravity 内核缓存与日志", "paths": ["~/Library/Application Support/Antigravity/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}", "~/Library/Application Support/Antigravity/{CachedData,CachedExtensionVSIXs}"], "risk": "safe", "action": "trash",
+          "explain": "Antigravity 编辑器的浏览器内核缓存、扩展安装包和日志，删除后会自动重建。" },
+        { "id": "gm-ag-workspace", "label": "Antigravity 旧项目工作区状态", "paths": ["~/Library/Application Support/Antigravity/User/workspaceStorage/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "每个打开过的项目各存一份状态，项目早就不用了也不会删除。" }
+      ]
+    },
+    {
+      "id": "opencode",
+      "name": "opencode",
+      "color": "#F5A524",
+      "detect": { "paths": ["~/.local/share/opencode", "~/.opencode", "~/Library/Application Support/ai.opencode.desktop"], "processes": ["opencode", "OpenCode"] },
+      "rules": [
+        { "id": "oc-protected", "label": "程序与登录凭证", "risk": "protected", "action": "none",
+          "paths": ["~/.local/share/opencode/auth.json", "~/.local/share/opencode/mcp-auth.json", "~/.local/share/opencode/bin", "~/.config/opencode", "~/.opencode/skills"],
+          "explain": "opencode 本体和登录信息。" },
+        { "id": "oc-db", "label": "会话数据库", "paths": ["~/.local/share/opencode/opencode.db"], "risk": "compact", "action": "vacuum",
+          "explain": "opencode 的会话都存在这里，退出后可以压缩。" },
+        { "id": "oc-snapshot", "label": "文件快照与工具输出", "paths": ["~/.local/share/opencode/snapshot/*", "~/.local/share/opencode/tool-output/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "修改文件前的快照和工具的输出记录。" },
+        { "id": "oc-log", "label": "日志", "paths": ["~/.local/share/opencode/log", "~/Library/Application Support/ai.opencode.desktop/{Crashpad,logs}"], "risk": "safe", "action": "trash",
+          "explain": "只用于排查问题。" },
+        { "id": "oc-skills-bak", "label": "技能的旧备份", "paths": ["~/.opencode/skills_backup"], "risk": "safe", "action": "trash",
+          "explain": "更新技能时留下的备份。" }
+      ]
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi Code",
+      "color": "#CBD5E1",
+      "detect": { "paths": ["~/.kimi", "~/.kimi-code", "~/Library/Application Support/kimi-code-app", "~/Library/Application Support/kimi-desktop"], "processes": ["kimi", "Kimi Code", "Kimi"] },
+      "rules": [
+        { "id": "km-protected", "label": "程序、登录凭证、配置与技能", "risk": "protected", "action": "none",
+          "paths": ["~/.kimi/credentials", "~/.kimi/config.toml", "~/.kimi/mcp.json", "~/.kimi/kimi.json",
+                    "~/.kimi-code/bin", "~/.kimi-code/server", "~/.kimi-code/plugins", "~/.kimi-code/credentials", "~/.kimi-code/oauth", "~/.kimi-code/config.toml", "~/.kimi-code/tui.toml", "~/.kimi-code/mcp.json", "~/.kimi-code/workspaces.json", "~/.kimi-code/workspace-trust", "~/.kimi-code/server.token", "~/.kimi-code/device_id", "~/.kimi-code/session_index.jsonl", "~/.kimi-code/user-history",
+                    "~/.kimi-webbridge/bin", "~/.kimi-webbridge/identity.json",
+                    "~/Library/Application Support/kimi-desktop/daimon-share/daimon/skills", "~/Library/Application Support/kimi-desktop/daimon-share/daimon/runtime", "~/Library/Application Support/kimi-desktop/daimon-share/daimon/agents", "~/Library/Application Support/kimi-desktop/daimon-share/daimon/config.json", "~/Library/Application Support/kimi-desktop/daimon-share/daimon/kimi-code-key.json"],
+          "explain": "Kimi Code 程序本体、登录信息、配置和技能。删除会导致重新登录或无法启动。" },
+        { "id": "km-sessions", "label": "旧会话", "paths": ["~/.kimi/sessions/*", "~/.kimi-code/sessions/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "Kimi Code 的会话记录。" },
+        { "id": "km-file-history", "label": "文件修改快照与上传的图片", "paths": ["~/.kimi-code/file-history", "~/.kimi-code/image-upload-cache"], "risk": "history", "action": "age-filter",
+          "explain": "修改文件前的快照和对话里上传过的图片。" },
+        { "id": "km-cache", "label": "缓存、日志与遥测", "risk": "safe", "action": "trash",
+          "paths": ["~/.kimi/logs", "~/.kimi/prompt-cache", "~/.kimi/telemetry", "~/.kimi/config.json.bak",
+                    "~/.kimi-code/cache/query-store", "~/.kimi-code/logs", "~/.kimi-code/telemetry", "~/.kimi-code/updates", "~/.kimi-code/migration-errors.log", "~/.kimi-code/config.toml.bak", "~/.kimi-code/config.toml.*.bak",
+                    "~/.kimi-webbridge/logs", "~/Library/Application Support/kimi-desktop/daimon-share/daimon/logs", "~/Library/Caches/kimi-code", "~/Library/Application Support/kimi-code-app/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}"],
+          "explain": "查询缓存、日志、更新包和桌面版的内核缓存，删除后会自动重建。" }
+      ]
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax Code",
+      "color": "#F43F5E",
+      "detect": { "paths": ["~/.minimax", "~/.minimax-agent-cn", "~/Library/Application Support/MiniMax"], "apps": ["MiniMax Code.app"], "processes": ["MiniMax Code", "MiniMax"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "mm-protected", "label": "智能体、技能与配置", "risk": "protected", "action": "none",
+          "paths": ["~/.minimax/agents", "~/.minimax/.builtin-skills", "~/.minimax/nexus", "~/.minimax/sqlite.db", "~/.minimax/v2/assets", "~/.minimax/v2/plugin-cache", "~/.minimax/v2/migration"],
+          "explain": "内置智能体的运行环境、技能和配置。删除后 MiniMax Code 可能无法正常工作。" },
+        { "id": "mm-sessions", "label": "旧会话", "paths": ["~/.minimax/v2/sessions/*", "~/.minimax-agent-cn/projects/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "MiniMax Code 的会话记录。" },
+        { "id": "mm-tasks", "label": "后台任务记录", "paths": ["~/.minimax/background-tasks/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "后台任务的运行记录。" },
+        { "id": "mm-db", "label": "运行状态数据库", "paths": ["~/.minimax/v2/sqlite/runtime-state.sqlite"], "risk": "compact", "action": "vacuum",
+          "explain": "MiniMax Code 的运行状态数据库。不能删除，退出后可以压缩。" },
+        { "id": "mm-db-backups", "label": "数据库旧备份", "paths": ["~/.minimax/v2/sqlite/backups/*"], "risk": "safe", "action": "age-filter", "ageUnit": "entry",
+          "explain": "MiniMax Code 自动生成的数据库备份，只清理 30 天前的。" },
+        { "id": "mm-cache", "label": "缓存与日志", "risk": "safe", "action": "trash",
+          "paths": ["~/.minimax/cache", "~/.minimax/v2/observability", "~/Library/Application Support/MiniMax/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}", "~/Library/Application Support/MiniMax/Partitions/*/{Cache,Code Cache,GPUCache}"],
+          "explain": "运行缓存、观测日志和内核缓存，删除后会自动重建。" },
+        { "id": "mm-orphan", "label": "MiniMax Code 全部残留数据", "paths": ["~/.minimax", "~/.minimax-agent-cn", "~/Library/Application Support/MiniMax"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 MiniMax Code.app，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "zcode",
+      "name": "ZCode",
+      "color": "#22D3EE",
+      "detect": { "paths": ["~/.zcode", "~/Library/Application Support/ZCode", "~/Library/Application Support/ai.z.zcode"], "apps": ["ZCode.app"], "processes": ["ZCode", "zcode"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "zc-protected", "label": "登录信息、插件与配置", "risk": "protected", "action": "none",
+          "paths": ["~/Library/Application Support/ai.z.zcode", "~/.zcode/agents", "~/.zcode/cli/config.json", "~/.zcode/cli/plugins", "~/.zcode/bundled-agents", "~/.zcode/computer-use", "~/.zcode/v2/config.json", "~/.zcode/v2/tasks-index.sqlite", "~/.zcode/v2/runtime"],
+          "explain": "登录信息、插件、内置智能体和配置。" },
+        { "id": "zc-sessions", "label": "旧会话与产物", "paths": ["~/.zcode/cli/agents/*", "~/.zcode/cli/rollout/*", "~/.zcode/cli/artifacts/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "每个会话的工作目录、运行记录和生成的产物，单个会话可能有几百 MB。" },
+        { "id": "zc-checkpoints", "label": "代码检查点", "paths": ["~/.zcode/v2/checkpoints/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "用于回退代码的快照。30 天前的基本不会再用到。" },
+        { "id": "zc-db", "label": "会话数据库", "paths": ["~/.zcode/cli/db/db.sqlite"], "risk": "compact", "action": "vacuum",
+          "explain": "ZCode 的会话数据库。不能删除，退出后可以压缩。" },
+        { "id": "zc-cache", "label": "日志、图片缓存与内置浏览器缓存", "risk": "safe", "action": "trash",
+          "paths": ["~/.zcode/logs", "~/.zcode/v2/logs", "~/.zcode/v2/crash", "~/.zcode/cli/image-cache",
+                    "~/Library/Application Support/ZCode/session/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}", "~/Library/Application Support/ZCode/session/Partitions/*/{Cache,Code Cache,GPUCache}"],
+          "explain": "运行日志、崩溃记录、图片缓存和内置浏览器的缓存，删除后会自动重建。" },
+        { "id": "zc-orphan", "label": "ZCode 全部残留数据", "paths": ["~/.zcode", "~/Library/Application Support/ZCode", "~/Library/Application Support/ai.z.zcode"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 ZCode.app，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek Harness",
+      "color": "#4D6BFE",
+      "detect": { "paths": ["~/Library/Application Support/deepseek-harness-desktop", "~/Library/Application Support/@deepseek-ai/dsh-desktop", "~/.deepseekgui"], "apps": ["DeepSeek Harness.app"], "processes": ["DeepSeek Harness"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "ds-protected", "label": "配置与设置", "risk": "protected", "action": "none",
+          "paths": ["~/Library/Application Support/deepseek-harness-desktop/harness-home/settings.yaml", "~/Library/Application Support/deepseek-harness-desktop/harness-home/profiles", "~/Library/Application Support/deepseek-harness-desktop/harness-home/storages"],
+          "explain": "DeepSeek Harness 的设置、配置档案和数据存储。" },
+        { "id": "ds-sessions", "label": "旧会话", "paths": ["~/Library/Application Support/deepseek-harness-desktop/harness-home/sessions/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "DeepSeek Harness 的会话记录。" },
+        { "id": "ds-cache", "label": "内核缓存与日志", "risk": "safe", "action": "trash",
+          "paths": ["~/Library/Application Support/@deepseek-ai/dsh-desktop/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}", "~/Library/Application Support/@deepseek-ai/dsh-desktop/Partitions/*/{Cache,Code Cache,GPUCache}", "~/Library/Application Support/deepseek-harness-desktop/{Cache,Code Cache,GPUCache,GraphiteDawnCache,DawnGraphiteCache,DawnWebGPUCache,Crashpad,logs}"],
+          "explain": "桌面版的浏览器内核缓存和日志，删除后会自动重建。" },
+        { "id": "ds-orphan", "label": "DeepSeek Harness 全部残留数据", "paths": ["~/Library/Application Support/deepseek-harness-desktop", "~/Library/Application Support/@deepseek-ai/dsh-desktop", "~/.deepseekgui"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 DeepSeek Harness.app，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen Code",
+      "color": "#8B5CF6",
+      "detect": { "paths": ["~/.qwen"], "processes": ["qwen"] },
+      "rules": [
+        { "id": "qw-protected", "label": "登录凭证与配置", "risk": "protected", "action": "none",
+          "paths": ["~/.qwen/settings.json", "~/.qwen/oauth_creds.json", "~/.qwen/google_accounts.json", "~/.qwen/skills"],
+          "explain": "删除会导致重新登录、设置丢失。" },
+        { "id": "qw-history", "label": "会话与任务记录", "paths": ["~/.qwen/projects/*", "~/.qwen/tmp/*", "~/.qwen/todos/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "Qwen Code 的会话与任务记录。" },
+        { "id": "qw-debug", "label": "调试日志", "paths": ["~/.qwen/debug", "~/.qwen/settings.json.orig"], "risk": "safe", "action": "trash",
+          "explain": "只用于排查问题。" }
+      ]
+    },
+    {
+      "id": "kiro",
+      "name": "Kiro",
+      "color": "#A06BFF",
+      "detect": { "paths": ["~/Library/Application Support/Kiro", "~/.kiro"], "apps": ["Kiro.app"], "processes": ["Kiro"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "ki-cache", "label": "内核缓存与日志", "paths": ["~/Library/Application Support/Kiro/{Cache,Code Cache,GPUCache,DawnGraphiteCache,DawnWebGPUCache,CachedData,CachedExtensionVSIXs,Crashpad,logs}"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重建。" },
+        { "id": "ki-workspace", "label": "旧项目工作区状态", "paths": ["~/Library/Application Support/Kiro/User/workspaceStorage/*"], "risk": "history", "action": "age-filter", "ageUnit": "entry",
+          "explain": "每个打开过的项目各存一份状态。" },
+        { "id": "ki-orphan", "label": "Kiro 全部残留数据", "paths": ["~/Library/Application Support/Kiro", "~/.kiro"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 Kiro.app，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "trae",
+      "name": "Trae",
+      "color": "#FF5A5F",
+      "detect": { "paths": ["~/Library/Application Support/Trae", "~/Library/Application Support/Trae CN", "~/Library/Application Support/TRAE SOLO", "~/.trae", "~/.trae-cn", "~/.trae-aicc"], "apps": ["Trae.app", "Trae CN.app", "TRAE SOLO.app"], "processes": ["Trae", "Trae CN", "TRAE SOLO"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "tr-cache", "label": "内核缓存与日志", "paths": ["~/Library/Application Support/{Trae,Trae CN,TRAE SOLO}/{Cache,Code Cache,GPUCache,DawnGraphiteCache,DawnWebGPUCache,CachedData,CachedExtensionVSIXs,Crashpad,logs}"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重建。" },
+        { "id": "tr-orphan", "label": "Trae 全部残留数据", "paths": ["~/Library/Application Support/Trae", "~/Library/Application Support/Trae CN", "~/Library/Application Support/TRAE SOLO", "~/.trae", "~/.trae-cn", "~/.trae-aicc"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "Trae、Trae CN 和 TRAE SOLO 都没有安装，这些是卸载后留下的数据。" }
+      ]
+    },
+    {
+      "id": "windsurf",
+      "name": "Windsurf",
+      "color": "#14B8A6",
+      "detect": { "paths": ["~/.windsurf", "~/.codeium", "~/Library/Application Support/Windsurf"], "apps": ["Windsurf.app"], "processes": ["Windsurf"] },
+      "orphanWhenAppMissing": true,
+      "rules": [
+        { "id": "ws-cache", "label": "内核缓存与日志", "paths": ["~/Library/Application Support/Windsurf/{Cache,Code Cache,GPUCache,CachedData,CachedExtensionVSIXs,Crashpad,logs}"], "risk": "safe", "action": "trash",
+          "explain": "删除后会自动重建。" },
+        { "id": "ws-orphan", "label": "Windsurf 全部残留数据", "paths": ["~/.windsurf", "~/.codeium", "~/Library/Application Support/Windsurf"], "risk": "orphan", "action": "trash", "onlyWhen": "appMissing",
+          "explain": "没有找到 Windsurf.app，这些是卸载后留下的数据。" }
+      ]
+    }
+  ]
+}

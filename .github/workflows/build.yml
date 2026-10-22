@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: swift --version
+
+      - name: Install zstd
+        run: brew install zstd
+
+      - name: Test
+        run: swift test
+
+      - name: Build universal app
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then VERSION="${GITHUB_REF_NAME#v}"; else VERSION="0.0.0-${GITHUB_SHA::7}"; fi
+          VERSION="$VERSION" scripts/build-app.sh --universal --dist
+
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgentSweep
+          path: |
+            build/AgentSweep-*.dmg
+            build/AgentSweep-*.zip
+
+      - name: Publish release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/AgentSweep-*.dmg
+            build/AgentSweep-*.zip
+          generate_release_notes: true
+          body: |
+            Download the `.dmg`, drag AgentSweep into Applications. The build is not notarized yet: right-click → Open on first launch, or run `xattr -dr com.apple.quarantine /Applications/AgentSweep.app`.
+
+            下载 `.dmg`，把 AgentSweep 拖进「应用程序」。安装包尚未公证：首次打开请右键选择「打开」，或运行 `xattr -dr com.apple.quarantine /Applications/AgentSweep.app`。

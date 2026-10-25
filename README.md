@@ -4,6 +4,8 @@
 
 A native macOS cleaner built only for AI coding agents.
 
+**Website: [ai-suifeng.github.io/agent-clean-mac](https://ai-suifeng.github.io/agent-clean-mac/) · [Download](https://github.com/ai-suifeng/agent-clean-mac/releases/latest) · Free and open source**
+
 Most developers now run several AI coding tools side by side: Claude Code, Codex, Cursor, Gemini, Kimi Code, MiniMax Code, ZCode, opencode and more. Each one quietly fills your home folder with session logs, SQLite databases, browser caches, npx/uv packages and leftovers from tools you already uninstalled. On a typical machine that adds up to **tens of gigabytes**.
 
 General-purpose cleaners can tell you a folder is big. They can't tell you whether deleting it loses your chat history or logs you out. AgentSweep knows each tool's folder layout, explains every item in plain language and only touches what it can prove is safe.
@@ -22,6 +24,7 @@ General-purpose cleaners can tell you a folder is big. They can't tell you wheth
 - **Leftover detection**: finds data from tools whose app is gone (Trae, Windsurf, …).
 - **Discovery**: lists folders that look like AI tools the rules don't cover yet. They are only shown, never cleaned.
 - **Extensible rules**: add or override tools with a JSON file. No code changes or rebuild needed.
+- **Updates itself**: checks GitHub once a day and installs signed updates through Sparkle. See [docs/RELEASING.md](docs/RELEASING.md).
 
 | Scanning | Cleaning |
 |---|---|
@@ -65,7 +68,7 @@ Every rule has one of five risk levels:
 
 ## Install
 
-1. Download `AgentSweep-<version>.dmg` from [Releases](https://github.com/ai-suifeng/agent-clean-mac/releases).
+1. Download `AgentSweep.dmg` from the [website](https://ai-suifeng.github.io/agent-clean-mac/) or [Releases](https://github.com/ai-suifeng/agent-clean-mac/releases/latest).
 2. Drag **AgentSweep** into **Applications**.
 3. The build is not notarized yet, so macOS blocks the first launch. Right-click the app and choose **Open**, or run:
 
@@ -74,6 +77,8 @@ Every rule has one of five risk levels:
    ```
 
 Requires macOS 14 Sonoma or later. Runs natively on Apple silicon and Intel.
+
+From 0.2.0 on, AgentSweep updates itself: it checks GitHub once a day, verifies the update's EdDSA signature and installs it in one click. Turn checks off, or install silently, in Settings (⌘,).
 
 ## Usage
 
@@ -129,7 +134,7 @@ scripts/build-app.sh --open                 # build/AgentSweep.app for this Mac
 scripts/build-app.sh --universal --dist     # universal app + .zip + .dmg in build/
 ```
 
-Pushing a tag like `v0.2.0` makes GitHub Actions build the universal `.dmg` and `.zip` and attach them to a release.
+Pushing a tag like `v0.3.0` makes GitHub Actions build the universal `.dmg` and `.zip`, sign the update, write `appcast.xml` and attach everything to a release; installed apps pick it up within a day. The full process, keys and first-time setup are in [docs/RELEASING.md](docs/RELEASING.md).
 
 ### Development flags
 
@@ -138,7 +143,7 @@ open build/AgentSweep.app --args --scan                # start scanning on launc
 open build/AgentSweep.app --args --section sessions    # open a page: clean / sessions / compact / history / rules
 open build/AgentSweep.app --args --home /tmp/fake-home # treat another folder as the home folder
 # Debug builds only (scripts/build-app.sh --debug): play the clean animation without moving any file
-open build/AgentSweep.app --args --home /tmp/fake-home --scan --demo-clean
+open build/AgentSweep.app --args --scan --demo-clean
 ```
 
 ## Project layout
@@ -149,6 +154,8 @@ open build/AgentSweep.app --args --home /tmp/fake-home --scan --demo-clean
 | `Sources/AgentSweepCore/` | Glob matching, scanner, trash and restore, SQLite compaction, session export, discovery, process detection |
 | `Sources/AgentSweep/` | SwiftUI app. `StageEngine.swift` draws the scanner, ring and black hole with `Canvas` + `TimelineView` |
 | `scripts/` | App bundling, packaging and icon generation |
+| `website/` | The website, deployed to GitHub Pages by `.github/workflows/pages.yml` |
+| `video/` | Source of the intro films (shot list, renderer, score) |
 | `docs/PRD.md` | Product requirements (Chinese) |
 | `prototype/agentsweep.html` | Interactive HTML prototype of the UI |
 

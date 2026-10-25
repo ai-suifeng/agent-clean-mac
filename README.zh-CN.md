@@ -4,6 +4,8 @@
 
 专门清理 AI 编程工具产生的文件的 macOS 原生应用。
 
+**官网：[ai-suifeng.github.io/agent-clean-mac](https://ai-suifeng.github.io/agent-clean-mac/) · [下载](https://github.com/ai-suifeng/agent-clean-mac/releases/latest) · 免费开源**
+
 现在很多开发者同时装着好几个 AI 编程工具：Claude Code、Codex、Cursor、Gemini、Kimi Code、MiniMax Code、ZCode、opencode……它们会在主目录里不停写入会话记录、SQLite 数据库、浏览器缓存、npx/uv 依赖包，卸载之后还会留下一堆残留。一台日常开发机上，这些加起来往往有**几十 GB**。
 
 通用的清理工具只能告诉你「这个文件夹很大」，却没法告诉你删了会不会丢聊天记录、会不会掉登录。AgentSweep 认识每个工具的目录结构，给每一项都配上一句人话说明，只清理能确认安全的东西。
@@ -20,6 +22,7 @@
 - **卸载残留检测**：App 已经删了、数据还留着的工具（Trae、Windsurf……）会被单独找出来。
 - **发现未收录的工具**：列出看起来像 AI 工具、但规则库还没覆盖的文件夹。只展示，永远不会清理。
 - **可扩展的规则**：放一个 JSON 文件就能新增或覆盖工具规则，不用改代码，也不用重新编译。
+- **自动更新**：每天检查一次 GitHub 上的新版本，通过 Sparkle 安装签过名的更新。详见 [docs/RELEASING.md](docs/RELEASING.md)。
 
 | 扫描 | 清理 |
 |---|---|
@@ -63,7 +66,7 @@
 
 ## 安装
 
-1. 在 [Releases](https://github.com/ai-suifeng/agent-clean-mac/releases) 下载 `AgentSweep-<版本号>.dmg`。
+1. 在[官网](https://ai-suifeng.github.io/agent-clean-mac/)或 [Releases](https://github.com/ai-suifeng/agent-clean-mac/releases/latest) 下载 `AgentSweep.dmg`。
 2. 把 **AgentSweep** 拖进「应用程序」文件夹。
 3. 目前的安装包还没做苹果公证，第一次打开会被 macOS 拦下。右键点应用选「打开」，或者在终端运行：
 
@@ -72,6 +75,8 @@
    ```
 
 需要 macOS 14 Sonoma 或更新版本，Apple 芯片和 Intel 都能原生运行。
+
+从 0.2.0 起，AgentSweep 会自己更新：每天检查一次 GitHub，校验更新包的 EdDSA 签名后一键安装。可以在「设置」（⌘,）里关闭自动检查，或开启自动下载安装。
 
 ## 使用方法
 
@@ -127,7 +132,7 @@ scripts/build-app.sh --open                 # 构建本机架构的 build/AgentS
 scripts/build-app.sh --universal --dist     # 构建通用版，并在 build/ 下生成 .zip 和 .dmg
 ```
 
-推送 `v0.2.0` 这样的版本标签后，GitHub Actions 会自动构建通用版的 `.dmg` 和 `.zip`，并发布到 Releases。
+推送 `v0.3.0` 这样的版本标签后，GitHub Actions 会自动构建通用版的 `.dmg` 和 `.zip`，给更新包签名、生成 `appcast.xml`，一起发布到 Releases；已安装的用户一天之内就会收到更新。完整流程、密钥和首次配置见 [docs/RELEASING.md](docs/RELEASING.md)。
 
 ### 开发参数
 
@@ -136,7 +141,7 @@ open build/AgentSweep.app --args --scan                # 启动后直接扫描
 open build/AgentSweep.app --args --section sessions    # 打开指定页面：clean / sessions / compact / history / rules
 open build/AgentSweep.app --args --home /tmp/fake-home # 把另一个文件夹当作主目录
 # 仅调试版（scripts/build-app.sh --debug）：播放清理动画，但不移动任何文件
-open build/AgentSweep.app --args --home /tmp/fake-home --scan --demo-clean
+open build/AgentSweep.app --args --scan --demo-clean
 ```
 
 ## 目录结构
@@ -147,6 +152,8 @@ open build/AgentSweep.app --args --home /tmp/fake-home --scan --demo-clean
 | `Sources/AgentSweepCore/` | 路径匹配、扫描、移到废纸篓与恢复、SQLite 压缩、会话导出、未收录工具发现、进程检测 |
 | `Sources/AgentSweep/` | SwiftUI 界面。`StageEngine.swift` 用 `Canvas` + `TimelineView` 绘制扫描、圆环和黑洞动效 |
 | `scripts/` | 打包、生成安装包和应用图标的脚本 |
+| `website/` | 官网，由 `.github/workflows/pages.yml` 部署到 GitHub Pages |
+| `video/` | 介绍视频的源工程（镜头表、渲染代码、配乐脚本） |
 | `docs/PRD.md` | 产品需求文档 |
 | `prototype/agentsweep.html` | 界面的交互式 HTML 原型 |
 

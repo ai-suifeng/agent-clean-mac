@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgentSweep · The cleaner for AI coding tools</title>
+<meta name="description" content="AgentSweep is a free, open-source macOS app that clears the caches, old sessions and leftovers of Claude Code, Codex, Cursor and other AI coding tools. It only touches what it can prove is safe, and everything goes to the Trash.">
+<meta name="theme-color" content="#070A12">
+<meta property="og:title" content="AgentSweep · The cleaner for AI coding tools">
+<meta property="og:description" content="A free, open-source macOS app that wins back the disk space your AI coding tools quietly took.">
+<meta property="og:image" content="https://ai-suifeng.github.io/agent-clean-mac/assets/intro-poster.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="../favicon.png">
+<link rel="alternate" hreflang="zh-CN" href="../">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="../assets/icon.png" alt="">AgentSweep</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#tools">Tools</a>
+      <a href="#safety">Safety</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="lang" href="../">中文</a>
+      <a class="btn btn-ghost btn-small" href="https://github.com/ai-suifeng/agent-clean-mac">GitHub</a>
+      <a class="btn btn-primary btn-small" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">Download</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <span class="eyebrow"><b>●</b> Open source · Free · Native macOS</span>
+      <h1>Win back the disk your <em>AI coding tools</em> took</h1>
+      <p class="lead">Claude Code, Codex and Cursor keep writing sessions, caches and packages, and leave piles behind when you uninstall them. AgentSweep knows their folders, tells you what every item is and what deleting it does, and only clears what it can prove is safe.</p>
+      <div class="actions">
+        <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+          Download for macOS
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/ai-suifeng/agent-clean-mac">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12.1c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.1c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 016 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.6 11.6 0 007.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+      <p class="meta">Latest <span class="ver" data-version>—</span> · macOS 14 or later · Apple silicon and Intel</p>
+
+      <div class="stage">
+        <div class="window">
+          <div class="window-bar"><i></i><i></i><i></i></div>
+          <video class="video-horizontal" src="../assets/intro.mp4" poster="../assets/intro-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="AgentSweep in 30 seconds"></video>
+          <video class="video-vertical" src="../assets/intro-vertical.mp4" poster="../assets/intro-vertical-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="AgentSweep in 30 seconds, vertical"></video>
+        </div>
+        <button class="sound" type="button" data-sound data-on="Sound off" data-off="Sound on">Sound on</button>
+      </div>
+    </div>
+
+    <div class="figures" aria-label="Measured on one developer machine">
+      <div class="figure"><div class="n">22.1<small>GB</small></div><p>of data left by AI coding tools</p></div>
+      <div class="figure"><div class="n">8.4<small>GB</small></div><p>safe to clear: it rebuilds itself or is long unused</p></div>
+      <div class="figure"><div class="n">14<small>tools</small></div><p>AI coding tools with rules today</p></div>
+    </div>
+    <p class="figure-note">Measured on the author's own machine. Yours will differ.</p>
+
+    <section id="how">
+      <div class="kicker">How it works</div>
+      <h2>Scan, understand, move to the Trash</h2>
+      <p class="section-lead">It takes under a minute. Scanning only reads file sizes and never opens or changes a file; before you clean, you see every path and what it is.</p>
+      <div class="steps">
+        <div class="step">
+          <img class="shot" src="../assets/scanning.jpg" alt="Scanning: each tool lights up on an orbit" loading="lazy">
+          <div>
+            <span class="tag">01 · Scan</span>
+            <h3>Every tool is a star on the orbit</h3>
+            <p>Each tool lights up as it is scanned and its data streams into the counter. Tools you already uninstalled are flagged on their own.</p>
+          </div>
+        </div>
+        <div class="step">
+          <img class="shot" src="../assets/results.jpg" alt="Results: a two-ring chart colored by risk, next to the cleaning list" loading="lazy">
+          <div>
+            <span class="tag">02 · Understand</span>
+            <h3>Every item says what deleting it does</h3>
+            <p>Tools inside, items outside, colored by risk. Tick items one by one or a whole group at once, and hover for the explanation.</p>
+          </div>
+        </div>
+        <div class="step">
+          <img class="shot" src="../assets/cleaning.jpg" alt="Cleaning: the selection is pulled into a black hole" loading="lazy">
+          <div>
+            <span class="tag">03 · Clean</span>
+            <h3>Into the Trash, and back if you want</h3>
+            <p>AgentSweep never deletes outright. Every clean records the original paths so you can restore it. Space is freed when you empty the Trash.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="kicker">Features</div>
+      <h2>Built for AI coding tools</h2>
+      <p class="section-lead">A general cleaner knows a folder is big. AgentSweep knows which tool owns it and what it is for.</p>
+      <div class="features">
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+          <h3>Knows each tool's folders</h3>
+          <p>14 tools including Claude Code, Codex, Cursor, Kimi Code and ZCode, with a rule and an explanation for every path.</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5h14v10H9l-4 4z"/></svg>
+          <h3>Export sessions before deleting</h3>
+          <p>Browse every Claude Code and Codex session, filter by project and age, and export them to Markdown.</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>
+          <h3>Databases are compacted, never deleted</h3>
+          <p>Chat databases of Cursor and Codex are backed up, then compacted once the tool quits. You see exactly how much comes back.</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+          <h3>Finds leftovers</h3>
+          <p>Data from tools whose app is long gone, like Trae and Windsurf, is picked out on its own.</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg>
+          <h3>Keeps up with new tools</h3>
+          <p>Rules are a JSON file; drop one into the local rules folder to add a tool. It also lists folders that look like uncovered AI tools.</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 11-2.3-5.7M20 4v5h-5"/></svg>
+          <h3>Updates itself</h3>
+          <p>Checks GitHub for a new version once a day and verifies its signature before installing. New tool rules arrive with each release.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="kicker">Supported tools</div>
+      <h2>The ones you installed are probably here</h2>
+      <p class="section-lead">Shared dev caches (uv, npx, bun, pip) count too: most MCP servers are launched through them.</p>
+      <div class="tools">
+        <span class="chip"><i style="background:#D97757"></i>Claude Code</span>
+        <span class="chip"><i style="background:#10A37F"></i>Codex</span>
+        <span class="chip"><i style="background:#8B8BFF"></i>Cursor</span>
+        <span class="chip"><i style="background:#4F8DF7"></i>Gemini / Antigravity</span>
+        <span class="chip"><i style="background:#CBD5E1"></i>Kimi Code</span>
+        <span class="chip"><i style="background:#F43F5E"></i>MiniMax Code</span>
+        <span class="chip"><i style="background:#22D3EE"></i>ZCode</span>
+        <span class="chip"><i style="background:#4D6BFE"></i>DeepSeek Harness</span>
+        <span class="chip"><i style="background:#F5A524"></i>opencode</span>
+        <span class="chip"><i style="background:#8B5CF6"></i>Qwen Code</span>
+        <span class="chip"><i style="background:#A06BFF"></i>Kiro</span>
+        <span class="chip"><i style="background:#FF5A5F"></i>Trae / TRAE SOLO</span>
+        <span class="chip"><i style="background:#14B8A6"></i>Windsurf</span>
+        <span class="chip"><i style="background:#94A3B8"></i>uv · npx · bun · pip</span>
+        <a class="chip more" href="https://github.com/ai-suifeng/agent-clean-mac#adding-a-tool">Missing yours? Add a rule →</a>
+      </div>
+    </section>
+
+    <section id="safety">
+      <div class="kicker">Safety</div>
+      <h2>It touches what it knows, nothing else</h2>
+      <p class="section-lead">Every rule has one of five levels. Files no rule covers are never touched.</p>
+      <div class="risks">
+        <div class="risk"><span class="pill" style="color:var(--orphan)">Leftover</span><p>The tool's app is gone and its data remains</p><span class="def">selected</span></div>
+        <div class="risk"><span class="pill" style="color:var(--safe)">Safe</span><p>Caches, logs and temp files that rebuild themselves</p><span class="def">selected</span></div>
+        <div class="risk"><span class="pill" style="color:var(--history)">Old history</span><p>Sessions untouched for 30 days; export them first if you like</p><span class="def">selected</span></div>
+        <div class="risk"><span class="pill" style="color:var(--compact)">Compact only</span><p>Chat databases: never deleted, only backed up and compacted</p><span class="def">locked</span></div>
+        <div class="risk"><span class="pill" style="color:var(--protected)">Protected</span><p>Credentials, config, skills, plugins and program files</p><span class="def">locked</span></div>
+      </div>
+      <div class="promises">
+        <div class="promise"><b>Nothing deleted outright</b><span>Everything goes to the Trash with its original path recorded.</span></div>
+        <div class="promise"><b>Guard rails</b><span>Your home folder and ~/Library can never be removed whole, even by a wrong rule.</span></div>
+        <div class="promise"><b>All code is public</b><span>MIT licensed; every rule can be read line by line on GitHub.</span></div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="kicker">Download</div>
+      <h2>Free, open source, no data collected</h2>
+      <div class="install">
+        <ol>
+          <li><div><b>Download AgentSweep.dmg</b><span>Open it and drag AgentSweep into Applications.</span></div></li>
+          <li><div><b>Right-click → Open the first time</b><span>The build is not notarized yet, so macOS says it cannot verify the developer. Right-click the app and choose Open, or run:</span>
+            <div class="code"><code id="xattr">xattr -dr com.apple.quarantine /Applications/AgentSweep.app</code><button class="copy" type="button" data-copy="xattr" data-done="Copied">Copy</button></div></div></li>
+          <li><div><b>Updates arrive on their own</b><span>The app tells you when a new version is out and installs it in one click. Or use AgentSweep → Check for Updates….</span></div></li>
+        </ol>
+        <div class="download-card">
+          <img src="../assets/icon.png" alt="">
+          <h3>AgentSweep <span data-version>—</span></h3>
+          <div class="sub">Released <span data-date>—</span> · macOS 14+ · Universal (Apple silicon and Intel)</div>
+          <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">Download .dmg — free</a>
+          <div class="alt">
+            <a href="https://github.com/ai-suifeng/agent-clean-mac/releases">All releases</a>
+            <a href="https://github.com/ai-suifeng/agent-clean-mac">Source</a>
+            <a href="https://github.com/ai-suifeng/agent-clean-mac/blob/main/CHANGELOG.md">Changelog</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="kicker">FAQ</div>
+      <h2>Questions you might have</h2>
+      <div class="faq">
+        <details><summary>Is it really free?</summary><p>Yes. AgentSweep is MIT licensed, with no paid tier, no ads and no analytics. Its only network request checks GitHub for a new version.</p></details>
+        <details><summary>Could it delete something I need?</summary><p>It only handles paths its rules name. Credentials, config, skills and plugins are protected, and chat databases are compacted, never deleted. Every clean goes to the Trash and can be restored from the History page.</p></details>
+        <details><summary>Why didn't my free space change?</summary><p>Files in the Trash still take space. Once your tools run fine, empty the Trash to free it.</p></details>
+        <details><summary>Why does macOS say it can't verify the developer?</summary><p>The build is not notarized yet. Right-click the app and choose Open the first time, or run <code>xattr -dr com.apple.quarantine /Applications/AgentSweep.app</code>. The code is public, and you can build it yourself.</p></details>
+        <details><summary>How do updates work?</summary><p>From 0.2.0 on, the app checks once a day and offers a one-click install, verifying the update's signature first. Settings let you turn checks off or install automatically. 0.1.0 needs one manual download.</p></details>
+        <details><summary>My tool isn't on the list. What now?</summary><p>The Rules page lists folders that look like uncovered AI tools. Write a rule following the README and drop it into the local rules folder, or send it on GitHub so the next release brings it to everyone.</p></details>
+        <details><summary>How do I uninstall AgentSweep?</summary><p>Move the app to the Trash. To remove everything, also delete <code>~/Library/Application Support/AgentSweep</code> (clean history and database backups).</p></details>
+      </div>
+    </section>
+
+    <div class="closing">
+      <h2>Scan first. See what your agents left behind.</h2>
+      <p class="section-lead" style="margin:0 auto">Scanning only reads. Decide after you see the results.</p>
+      <div class="actions">
+        <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">Download for macOS</a>
+        <a class="btn btn-ghost" href="https://github.com/ai-suifeng/agent-clean-mac">Star on GitHub</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>AgentSweep · MIT License</span>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac">GitHub</a>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac/issues">Report an issue</a>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac/blob/main/CHANGELOG.md">Changelog</a>
+    <span class="spacer"></span>
+    <a href="../">中文</a>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+</body>
+</html>

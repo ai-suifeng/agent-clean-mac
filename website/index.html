@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgentSweep · AI 编程工具专用清理器</title>
+<meta name="description" content="AgentSweep 是一款免费开源的 macOS 应用，专门清理 Claude Code、Codex、Cursor 等 AI 编程工具留下的缓存、旧会话和卸载残留。只动能确认安全的文件，全部移到废纸篓，可以恢复。">
+<meta name="theme-color" content="#070A12">
+<meta property="og:title" content="AgentSweep · AI 编程工具专用清理器">
+<meta property="og:description" content="免费开源的 macOS 应用：找回被 Claude Code、Codex、Cursor 等工具占掉的磁盘空间。">
+<meta property="og:image" content="https://ai-suifeng.github.io/agent-clean-mac/assets/intro-poster.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="favicon.png">
+<link rel="alternate" hreflang="en" href="en/">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/icon.png" alt="">AgentSweep</a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#how">怎么用</a>
+      <a href="#features">功能</a>
+      <a href="#tools">支持的工具</a>
+      <a href="#safety">安全</a>
+      <a href="#faq">常见问题</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="lang" href="en/">English</a>
+      <a class="btn btn-ghost btn-small" href="https://github.com/ai-suifeng/agent-clean-mac">GitHub</a>
+      <a class="btn btn-primary btn-small" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">免费下载</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <span class="eyebrow"><b>●</b> 开源 · 免费 · macOS 原生</span>
+      <h1>AI 编程工具吃掉的硬盘，<em>一键要回来</em></h1>
+      <p class="lead">Claude Code、Codex、Cursor 这些工具会不停写入会话记录、缓存和依赖包，卸载之后还留着一大堆。AgentSweep 认识它们的目录结构，告诉你每一项是什么、删了会怎样，只清理能确认安全的文件。</p>
+      <div class="actions">
+        <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+          下载 macOS 版
+        </a>
+        <a class="btn btn-ghost" href="https://github.com/ai-suifeng/agent-clean-mac">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12.1c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2.1c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 016 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.9 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6a11.6 11.6 0 007.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+          GitHub 源码
+        </a>
+      </div>
+      <p class="meta">最新版本 <span class="ver" data-version>—</span> · 需要 macOS 14 或更新版本 · Apple 芯片和 Intel 都能用</p>
+
+      <div class="stage">
+        <div class="window">
+          <div class="window-bar"><i></i><i></i><i></i></div>
+          <video class="video-horizontal" src="assets/intro.mp4" poster="assets/intro-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="AgentSweep 30 秒介绍"></video>
+          <video class="video-vertical" src="assets/intro-vertical.mp4" poster="assets/intro-vertical-poster.jpg" autoplay muted loop playsinline preload="metadata" aria-label="AgentSweep 30 秒介绍（竖版）"></video>
+        </div>
+        <button class="sound" type="button" data-sound data-on="关闭声音" data-off="打开声音">打开声音</button>
+      </div>
+    </div>
+
+    <div class="figures" aria-label="一台开发机上的实测">
+      <div class="figure"><div class="n">22.1<small>GB</small></div><p>Agent 工具留下的数据</p></div>
+      <div class="figure"><div class="n">8.4<small>GB</small></div><p>可以放心清理，删除后会自动重建或早已不用</p></div>
+      <div class="figure"><div class="n">14<small>种</small></div><p>已经收录规则的 AI 编程工具</p></div>
+    </div>
+    <p class="figure-note">数字来自作者自己的一台开发机，每台电脑都不一样。</p>
+
+    <section id="how">
+      <div class="kicker">怎么用</div>
+      <h2>扫描、看清楚、移到废纸篓</h2>
+      <p class="section-lead">整个过程不到一分钟。扫描只读取文件大小，不会打开或修改任何文件；清理前你能看到每一项的路径和说明。</p>
+      <div class="steps">
+        <div class="step">
+          <img class="shot" src="assets/scanning.jpg" alt="扫描界面：每个工具在轨道上依次亮起" loading="lazy">
+          <div>
+            <span class="tag">01 · 扫描</span>
+            <h3>每个工具是轨道上的一颗星</h3>
+            <p>扫到哪个工具，哪颗星就亮起来，发现的数据流进中间的计数。卸载过的工具会被单独标出来。</p>
+          </div>
+        </div>
+        <div class="step">
+          <img class="shot" src="assets/results.jpg" alt="结果界面：按风险等级着色的双层圆环和清理列表" loading="lazy">
+          <div>
+            <span class="tag">02 · 看清楚</span>
+            <h3>每一项都写着「删了会怎样」</h3>
+            <p>内环是工具，外环是具体条目，颜色代表风险等级。可以按条目或按分组勾选、反选，悬停就能看到说明。</p>
+          </div>
+        </div>
+        <div class="step">
+          <img class="shot" src="assets/cleaning.jpg" alt="清理界面：选中的部分被吸进中心的黑洞" loading="lazy">
+          <div>
+            <span class="tag">03 · 清理</span>
+            <h3>移到废纸篓，随时能恢复</h3>
+            <p>AgentSweep 不直接删除任何东西。每次清理都会记下原来的位置，在「清理记录」里可以放回去。清空废纸篓后，空间才真正释放。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="kicker">功能</div>
+      <h2>为 AI 编程工具量身定做</h2>
+      <p class="section-lead">通用清理工具只知道文件夹大，AgentSweep 知道它是哪个工具的、是干什么的。</p>
+      <div class="features">
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg>
+          <h3>认识每个工具的目录</h3>
+          <p>Claude Code、Codex、Cursor、Kimi Code、ZCode 等 14 种工具，每条路径都有规则和中文说明。</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5h14v10H9l-4 4z"/></svg>
+          <h3>旧会话先导出再删</h3>
+          <p>浏览 Claude Code 和 Codex 的全部会话，按项目和时间筛选，一键导出成 Markdown 留档。</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/></svg>
+          <h3>数据库只压缩不删除</h3>
+          <p>Cursor、Codex 的聊天数据库永远不删。退出对应工具后，先备份再压缩，如实显示能收回多少空间。</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+          <h3>找出卸载残留</h3>
+          <p>App 早就删了、数据还留着的工具，比如 Trae、Windsurf，会被单独找出来。</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v6M8 11h6"/></svg>
+          <h3>新工具也能跟上</h3>
+          <p>规则是一个 JSON 文件，放进本地规则文件夹就能新增工具。还会列出可能未收录的 AI 工具文件夹提醒你。</p>
+        </div>
+        <div class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 11-2.3-5.7M20 4v5h-5"/></svg>
+          <h3>自动更新</h3>
+          <p>每天检查一次 GitHub 上的新版本，安装前校验签名。新工具的规则会随着版本更新送到你手上。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tools">
+      <div class="kicker">支持的工具</div>
+      <h2>你装的那几个，大概率都在这里</h2>
+      <p class="section-lead">开发缓存（uv、npx、bun、pip）也算在内，因为大多数 MCP 服务器都靠它们启动。</p>
+      <div class="tools">
+        <span class="chip"><i style="background:#D97757"></i>Claude Code</span>
+        <span class="chip"><i style="background:#10A37F"></i>Codex</span>
+        <span class="chip"><i style="background:#8B8BFF"></i>Cursor</span>
+        <span class="chip"><i style="background:#4F8DF7"></i>Gemini / Antigravity</span>
+        <span class="chip"><i style="background:#CBD5E1"></i>Kimi Code</span>
+        <span class="chip"><i style="background:#F43F5E"></i>MiniMax Code</span>
+        <span class="chip"><i style="background:#22D3EE"></i>ZCode</span>
+        <span class="chip"><i style="background:#4D6BFE"></i>DeepSeek Harness</span>
+        <span class="chip"><i style="background:#F5A524"></i>opencode</span>
+        <span class="chip"><i style="background:#8B5CF6"></i>Qwen Code</span>
+        <span class="chip"><i style="background:#A06BFF"></i>Kiro</span>
+        <span class="chip"><i style="background:#FF5A5F"></i>Trae / TRAE SOLO</span>
+        <span class="chip"><i style="background:#14B8A6"></i>Windsurf</span>
+        <span class="chip"><i style="background:#94A3B8"></i>uv · npx · bun · pip</span>
+        <a class="chip more" href="https://github.com/ai-suifeng/agent-clean-mac#adding-a-tool">你的工具不在里面？补一条规则 →</a>
+      </div>
+    </section>
+
+    <section id="safety">
+      <div class="kicker">安全</div>
+      <h2>只动认识的，不确定的一律不碰</h2>
+      <p class="section-lead">每条规则都属于五个等级之一。没有规则覆盖的文件，AgentSweep 不会碰。</p>
+      <div class="risks">
+        <div class="risk"><span class="pill" style="color:var(--orphan)">已卸载工具残留</span><p>App 已经删了，数据还留着</p><span class="def">默认勾选</span></div>
+        <div class="risk"><span class="pill" style="color:var(--safe)">可安全删除</span><p>缓存、日志、临时文件，删除后会自动重建</p><span class="def">默认勾选</span></div>
+        <div class="risk"><span class="pill" style="color:var(--history)">旧会话与历史</span><p>30 天没动过的记录，可以先导出成 Markdown</p><span class="def">默认勾选</span></div>
+        <div class="risk"><span class="pill" style="color:var(--compact)">数据库 · 仅压缩</span><p>聊天记录数据库，永远不删除，只备份后压缩</p><span class="def">锁定</span></div>
+        <div class="risk"><span class="pill" style="color:var(--protected)">受保护</span><p>登录凭证、配置、技能、插件、程序本体</p><span class="def">锁定</span></div>
+      </div>
+      <div class="promises">
+        <div class="promise"><b>不直接删除</b><span>全部移到废纸篓，并记下原位置。</span></div>
+        <div class="promise"><b>有硬性护栏</b><span>主目录、~/Library 这类根目录，规则写错也不会整个删掉。</span></div>
+        <div class="promise"><b>代码全部公开</b><span>MIT 开源，每条规则都能在 GitHub 上逐行查看。</span></div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="kicker">下载</div>
+      <h2>免费，开源，不收集任何数据</h2>
+      <div class="install">
+        <ol>
+          <li><div><b>下载 AgentSweep.dmg</b><span>打开后把 AgentSweep 拖进「应用程序」文件夹。</span></div></li>
+          <li><div><b>第一次打开时右键选「打开」</b><span>安装包还没有做苹果公证，macOS 会提示「无法验证开发者」。右键点应用选「打开」即可；也可以在终端运行：</span>
+            <div class="code"><code id="xattr">xattr -dr com.apple.quarantine /Applications/AgentSweep.app</code><button class="copy" type="button" data-copy="xattr" data-done="已复制">复制</button></div></div></li>
+          <li><div><b>之后自动更新</b><span>有新版本时应用会提示你，一键安装。也可以在菜单「AgentSweep → 检查更新…」手动检查。</span></div></li>
+        </ol>
+        <div class="download-card">
+          <img src="assets/icon.png" alt="">
+          <h3>AgentSweep <span data-version>—</span></h3>
+          <div class="sub">发布于 <span data-date>—</span> · macOS 14+ · 通用版（Apple 芯片和 Intel）</div>
+          <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">免费下载 .dmg</a>
+          <div class="alt">
+            <a href="https://github.com/ai-suifeng/agent-clean-mac/releases">全部版本</a>
+            <a href="https://github.com/ai-suifeng/agent-clean-mac">源码</a>
+            <a href="https://github.com/ai-suifeng/agent-clean-mac/blob/main/CHANGELOG.md">更新日志</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="kicker">常见问题</div>
+      <h2>你可能想问</h2>
+      <div class="faq">
+        <details><summary>真的免费吗？</summary><p>是的。AgentSweep 以 MIT 协议开源，没有付费版、没有广告，也不收集任何使用数据。唯一的网络请求是检查 GitHub 上有没有新版本。</p></details>
+        <details><summary>会不会误删我的东西？</summary><p>AgentSweep 只处理规则里写明的路径；登录凭证、配置、技能和插件都受保护，聊天数据库只压缩不删除。所有清理都是移到废纸篓，在「清理记录」里可以放回去。</p></details>
+        <details><summary>为什么清理后磁盘空间没有变化？</summary><p>文件在废纸篓里仍然占空间。确认工具都运行正常后，清空废纸篓，空间才会真正释放。</p></details>
+        <details><summary>为什么提示「无法验证开发者」？</summary><p>安装包还没有经过苹果公证。第一次打开时右键点应用选「打开」，或运行 <code>xattr -dr com.apple.quarantine /Applications/AgentSweep.app</code>，之后就不会再提示。代码全部开源，也可以自己从源码构建。</p></details>
+        <details><summary>怎么更新？</summary><p>0.2.0 及以后的版本每天自动检查一次更新，有新版本会提示你一键安装，安装前会校验更新包的签名。可以在「设置」里关闭自动检查，或开启自动下载安装。0.1.0 需要手动下载一次新版。</p></details>
+        <details><summary>我用的工具不在支持列表里怎么办？</summary><p>在「规则库」页面能看到可能未收录的 AI 工具文件夹。可以按 README 的示例写一条规则放进本地规则文件夹，也欢迎到 GitHub 提交规则，下个版本就能送到所有人手上。</p></details>
+        <details><summary>怎么卸载 AgentSweep？</summary><p>把应用拖进废纸篓即可。如果想删干净，再删掉 <code>~/Library/Application Support/AgentSweep</code>（清理记录和数据库备份）。</p></details>
+      </div>
+    </section>
+
+    <div class="closing">
+      <h2>先扫描看看，你的 Agent 工具占了多少</h2>
+      <p class="section-lead" style="margin:0 auto">扫描只读不写，看完结果再决定要不要清理。</p>
+      <div class="actions">
+        <a class="btn btn-primary" data-download href="https://github.com/ai-suifeng/agent-clean-mac/releases/latest">免费下载 macOS 版</a>
+        <a class="btn btn-ghost" href="https://github.com/ai-suifeng/agent-clean-mac">在 GitHub 上点个 Star</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>AgentSweep · MIT License</span>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac">GitHub</a>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac/issues">反馈问题</a>
+    <a href="https://github.com/ai-suifeng/agent-clean-mac/blob/main/CHANGELOG.md">更新日志</a>
+    <span class="spacer"></span>
+    <a href="en/">English</a>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+</body>
+</html>

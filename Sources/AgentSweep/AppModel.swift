@@ -139,8 +139,8 @@ final class AppModel {
         engine.beginResults(target: Double(selectedBytes))
         withAnimation(.smooth) { phase = .results }
         #if DEBUG
-        // Debug builds only: play the clean animation against a --home test folder (simulated, see clean()).
-        if home != NSHomeDirectory(), CommandLine.arguments.contains("--demo-clean") {
+        // Debug builds only: play the clean animation after the scan (simulated, see clean(): nothing is moved).
+        if CommandLine.arguments.contains("--demo-clean") {
             Task { try? await Task.sleep(for: .seconds(2.5)); clean() }
         }
         #endif
@@ -304,7 +304,7 @@ final class AppModel {
 /// Folder treated as the home folder. `--home <dir>` points it at a test folder (screenshots, development).
 let appHome: String = {
     let args = CommandLine.arguments
-    if let i = args.firstIndex(of: "--home"), i + 1 < args.count { return args[i + 1] }
+    if let i = args.firstIndex(of: "--home"), i + 1 < args.count { return (args[i + 1] as NSString).standardizingPath }
     return NSHomeDirectory()
 }()
 

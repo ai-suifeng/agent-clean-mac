@@ -68,11 +68,30 @@ struct Sidebar: View {
                 }
             }
             .scrollIndicators(.never)
+
+            VersionFooter()
         }
         .padding(.horizontal, 10)
         .padding(.bottom, 14)
         .frame(maxHeight: .infinity, alignment: .top)
         .background(Theme.panel.opacity(0.45))
+    }
+}
+
+struct VersionFooter: View {
+    @EnvironmentObject private var updater: Updater
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text("v\(updater.version)").font(.system(size: 11, design: .monospaced)).foregroundStyle(Theme.dim)
+            Spacer()
+            if Updater.isConfigured {
+                Button("检查更新") { updater.checkForUpdates() }
+                    .buttonStyle(MiniButtonStyle())
+                    .disabled(!updater.canCheck)
+            }
+        }
+        .padding(.horizontal, 10)
     }
 }
 
